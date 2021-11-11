@@ -3,19 +3,43 @@
 import jetbrains.buildServer.configs.kotlin.v2019_2.*
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
+import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.schedule
 
 
-version = "2019_2"
+version = "2021.2"
 project {
     description = "Terraform Pipeline"
-    buildType(Build)
+
+    buildType(Validate)
+    buildType(ApplyDev)
+    buildType(ApplyTest)
+    buildType(Destroy)
+
+    sequential {
+        buildType(Validate)
+        buildType(ApplyDev)
+        buildType(ApplyTest)
+    }
+
 }
 
-object Build : BuildType({
-    name = "Build"
-    description = "Multi environment terraform build"
+object Validate : BuildType({
+    name = "Validate"
+    description = "Test terraform code"
+
+    steps {
+        //  TODO: Add terraform validation checks here
+    }
+})
+
+object ApplyDev : BuildType({
+    name = "ApplyDev"
+    description = "Apply terraform code"
     vcs {
         root(DslContext.settingsRoot)
+    }
+    dependencies {
+        snapshot(Validate){}
     }
     triggers {
         vcs {
@@ -35,7 +59,7 @@ object Build : BuildType({
           """.trimIndent()
       }
       script {
-          name = "check OS verions"
+          name = "Check OS verions"
           scriptContent = """
           cat /etc/os-release
           lsb_release -a
@@ -66,7 +90,7 @@ object Build : BuildType({
           """.trimIndent()
       }
       script {
-        name = "build"
+        name = "Build"
         scriptContent = """
           mkdir bin
           echo "built artifact" > bin/compiled.txt
@@ -75,13 +99,31 @@ object Build : BuildType({
     }
 })
 
-/* 
-val Dev  = createEnvironment( "Dev",  "dev",  "dev",  "dev",  "_AWS_ACCOUNT_ID_" )
-val Test = createEnvironment( "Prod", "prod", "prod", "prod", "_AWS_ACCOUNT_ID_" )
+object ApplyTest : BuildType({
+    name = "ApplyTest"
+    description = "Deploy to Test environment"
 
-fun createEnvironment(envTitle: String, envKey: String, namespace: String, 
-    branchName: String, envAccountId: String): Project {
-    //val infraVCSRoot
-}
+    dependencies {
+        snapshot(ApplyDev){}
+    }
 
-*/
+    steps {
+
+    }
+})
+
+object Destroy : BuildType({
+    name = "Destroy"
+    description = "Destroy environment"
+
+    triggers {
+        schedule {
+            schedulingPolicy = cron {
+                "0 0 18 1/1 * ? *"
+            }
+        }
+    }
+    steps {
+        //  TODO: Add terraform destroy here
+    }
+})
