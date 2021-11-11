@@ -1,25 +1,15 @@
-import jetbrains.buildServer.configs.
+
 
 import jetbrains.buildServer.configs.kotlin.v2019_2.*
 import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 
-import projects.network.Network
 
 version = "2021.4"
-description = "TC Terraform AWS Demo"
-project(ProjecT)
-
-object Project : Project({
-
-    params{
-        param("aws_region", "us-east-1")
-    }
-
-    subProject(Dev)
-    subProject(Test)
+project {
+    description = "Terraform Pipeline"
     buildType(Build)
-})
+}
 
 object Build : BuildType({
     name = "Build"
@@ -45,19 +35,19 @@ object Build : BuildType({
           """.trimIndent()
       }
       script {
-          name "check OS verions"
+          name = "check OS verions"
           scriptContent = """
           cat /etc/os-release
           lsb_release -a
           uname -r
-          """.trimIdent()
+          """.trimIndent()
       }
       script {
-          name "Check local files"
+          name = "Check local files"
           scriptContent = """
           pwd
           ls -ltr
-          """.trimIdent()
+          """.trimIndent()
       }
       script {
           name = "Install Terraform"
@@ -67,10 +57,10 @@ object Build : BuildType({
           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
           sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
           sudo apt install terraform
-          """.trimIdent()
+          """.trimIndent()
       }
       script {
-          name "Terraform Init"
+          name = "Terraform Init"
           scriptContent = """
           terraform init
           """.trimIndent()
