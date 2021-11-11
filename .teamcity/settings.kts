@@ -5,7 +5,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.triggers.vcs
 import jetbrains.buildServer.configs.kotlin.v2019_2.buildSteps.script
 
 
-version = "2021.4"
+version = "2019_2"
 project {
     description = "Terraform Pipeline"
     buildType(Build)
