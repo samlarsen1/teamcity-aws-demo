@@ -51,6 +51,29 @@ steps {
       "
   }
   script {
+      name "Check local files"
+      scriptContent = """
+      pwd
+      ls -ltr
+      "
+  }
+  script {
+      name = "Install Terraform"
+      scriptContent = """
+      sudo apt-get update
+      sudo apt-get install -y gnupg software-properties-common curl
+      curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+      sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+      sudo apt install terraform
+      "
+  }
+  script {
+      name "Terraform Init"
+      scriptContent = """
+      terraform init
+      "
+  }
+  script {
     name = "build"
     scriptContent = """
       mkdir bin
