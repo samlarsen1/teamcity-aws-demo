@@ -20,7 +20,7 @@ object Project : Project({
 
 object Build : BuildType({
     name = "Build"
-
+    description = "Multi environment terraform build"
     vcs {
         root(DslContext.settingsRoot)
     }
