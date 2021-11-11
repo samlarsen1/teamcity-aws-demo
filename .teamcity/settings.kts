@@ -29,6 +29,19 @@ object Validate : BuildType({
 
     steps {
         //  TODO: Add terraform validation checks here
+        script {
+            name = "Check OS verions"
+            scriptContent = """
+            lsb_release -a
+            whoami
+            """.trimIndent()
+        }
+        script {
+            name = "Check terraform installed"
+            scriptContent = """
+            $(dpkg-query -W -f='${'$'}{Status}' terraform 2>/dev/null | grep -c "ok installed")
+            """.trimIndent()
+        }
     }
 })
 
@@ -59,18 +72,11 @@ object ApplyDev : BuildType({
           """.trimIndent()
       }
       script {
-          name = "Check OS verions"
-          scriptContent = """
-          cat /etc/os-release
-          lsb_release -a
-          uname -r
-          """.trimIndent()
-      }
-      script {
           name = "Check local files"
           scriptContent = """
           pwd
-          ls -ltr
+          ls ../ -ltr
+          ls ../../ -ltr
           """.trimIndent()
       }
       script {
@@ -80,7 +86,7 @@ object ApplyDev : BuildType({
           sudo apt-get install -y gnupg software-properties-common curl
           curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
           sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-          sudo apt install terraform
+          sudo apt install -y terraform
           """.trimIndent()
       }
       script {

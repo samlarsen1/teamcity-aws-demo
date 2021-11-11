@@ -4,3 +4,9 @@
 .terraform/
 .terraform.lock.hcl
 .terraformrc
+ci/buildserver_pgdata
+ci/teamcity-server-logs
+!ci/teamcity-server-logs/.keep
+ci/data_dir
+!ci/data_dir/config/database.properties
+.DS_Store
