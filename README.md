@@ -30,7 +30,9 @@ Run local TeamCity stack
 
 ```shell script
 cd ci
-docker-compose up -d
+docker build -t teamcity-terraform-agent agents/terraform-agent/
+docker swarm init
+docker stack deploy --compose-file docker-compose.yml teamcity
 # once running get super admin token for first login
 grep -E 'token\: [0-9]{16,22}' teamcity-server-logs/teamcity-server.log | tail -1
 ```

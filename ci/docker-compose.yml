@@ -12,7 +12,6 @@ version: '3.1'
 services:
   db:
     image: postgres:latest
-    restart: always
     environment:
       - POSTGRES_PASSWORD=teamcity_password
       - POSTGRES_USER=teamcity_user
@@ -40,11 +39,7 @@ services:
           cpus: "1"
 
   teamcity-terraform-agent:
-    image: teamcity-terraform-agent
-    build:
-      context: .
-      dockerfile: ./agents/terraform-agent/Dockerfile
-    privileged: true
+    image: teamcity-terraform-agent:latest
     volumes:
       - ./agents/terraform-agent/conf:/data/teamcity_agent/conf
     environment:
@@ -55,15 +50,3 @@ services:
           cpus: "2"
         reservations:
           cpus: "0.5"
-
-
-#  teamcity-agent-1:
-#    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
-#    privileged: true
-#    volumes:
-#      - ./agents/agent-1/conf:/data/teamcity_agent/conf
-#    environment:
-#      - DOCKER_IN_DOCKER=start
-#    cpus: .5
-
-

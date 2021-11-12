@@ -72,36 +72,20 @@ object ApplyDev : BuildType({
           """.trimIndent()
       }
       script {
-          name = "Check local files"
-          scriptContent = """
-          pwd
-          ls ../ -ltr
-          ls ../../ -ltr
-          """.trimIndent()
-      }
-      script {
-          name = "Install Terraform"
-          scriptContent = """
-          sudo apt-get update
-          sudo apt-get install -y gnupg software-properties-common curl
-          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-          sudo apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-          sudo apt install -y terraform
-          """.trimIndent()
-      }
-      script {
-          name = "Terraform Init"
+          name = "Terraform Plan"
+          //  TODO: Add workspace config in here for environment
           scriptContent = """
           terraform init
+          terraform plan 
           """.trimIndent()
       }
-      script {
-        name = "Build"
-        scriptContent = """
-          mkdir bin
-          echo "built artifact" > bin/compiled.txt
+        script {
+            name = "Terraform Apply"
+            //  TODO: Add workspace config in here for environment
+            scriptContent = """
+          terraform apply
           """.trimIndent()
-      }
+        }
     }
 })
 
