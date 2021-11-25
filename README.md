@@ -50,7 +50,9 @@ credentials "app.terraform.io" {
 
 Run terraform plan (this will only run against dev)
 ```shell script
-terraform init
+# setup remote workspace (includes terraform init)
+./set-workspace.sh dev
+
 terraform plan
 ```
 

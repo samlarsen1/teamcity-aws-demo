@@ -4,6 +4,8 @@
 .terraform/
 .terraform.lock.hcl
 .terraformrc
+workspace.auto.tfvars
+
 ci/buildserver_pgdata
 ci/teamcity-server-logs
 !ci/teamcity-server-logs/.keep
