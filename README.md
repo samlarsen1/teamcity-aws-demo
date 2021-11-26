@@ -7,7 +7,6 @@ This repo is for testing automated terraform deployments using TeamCity Kotlin D
 
 ### Local
 * Terraform
-* Docker & Docker Compose
 
 ### Remote
 * Terraform Enterprise 
@@ -26,19 +25,6 @@ In each workspace create AWS account credentials and store them as environment v
 
 ### Local
 
-Run local TeamCity stack
-
-```shell script
-cd ci
-docker build -t teamcity-terraform-agent agents/terraform-agent/
-docker swarm init
-docker stack deploy --compose-file docker-compose.yml teamcity
-# once running get super admin token for first login
-grep -E 'token\: [0-9]{16,22}' teamcity-server-logs/teamcity-server.log | tail -1
-```
-
-Setup a manual connection to this repo with git credentials using the identified `settings.kts` file
-
 Create local TF Enterprise token authentication config in `~/.terraformrc`
 
 ```hcl-terraform
@@ -48,10 +34,10 @@ credentials "app.terraform.io" {
 }
 ```
 
-Run terraform plan (this will only run against dev)
+Run terraform plan
 ```shell script
 # setup remote workspace (includes terraform init)
-./set-workspace.sh dev
+./set-workspace.sh demo-dev
 
 terraform plan
 ```
